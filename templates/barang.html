@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6 mt-6">
+    <h1 class="text-3xl font-bold">Manajemen Barang POS</h1>
+    <a href="{{ url_for('add_item') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+        Tambah Barang
+    </a>
+</div>
+
+<div class="overflow-x-auto mt-4 mb-10">
+    <table class="w-full text-sm text-left text-gray-700 dark:text-gray-400 border border-gray-300">
+        <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700">
+            <tr>
+                <th class="px-4 py-3">ID</th>
+                <th class="px-4 py-3">Nama Barang</th>
+                <th class="px-4 py-3">Harga</th>
+                <th class="px-4 py-3">Stok</th>
+                <th class="px-4 py-3 text-right">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr class="bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700">
+                <td class="px-4 py-3">{{ item['code'] }}</td>
+                <td class="px-4 py-3">{{ item['name'] }}</td>
+                <td class="px-4 py-3">Rp {{ '{:,.2f}'.format(item['price']) }}</td>
+                <td class="px-4 py-3">{{ item['stock'] }}</td>
+                <td class="px-4 py-3 flex items-center justify-end space-x-2">
+                    <button id="dropdown-button-{{ item['code'] }}" data-dropdown-toggle="dropdown-{{ item['code'] }}" type="button"
+                        class="inline-flex items-center p-1 text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                    </button>
+
+                    <div id="dropdown-{{ item['code'] }}" class="hidden z-10 w-44 bg-white rounded-lg divide-y divide-gray-100 shadow-lg dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button-{{ item['code'] }}">
+                            <li>
+                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Show
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Edit
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="py-1">
+                            <a href="{{ url_for('delete_item', code=item['code']) }}" class="block py-2 px-4 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400 dark:hover:text-white">
+                                Hapus
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

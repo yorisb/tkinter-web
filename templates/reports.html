@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto mt-8">
+    <h2 class="text-2xl font-semibold text-gray-700">Laporan Bulanan</h2>
+
+    <div class="overflow-x-auto mt-4">
+        <table class="w-full border border-gray-200 shadow-md rounded-lg">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="px-4 py-2">Periode</th>
+                    <th class="px-4 py-2">Total Transaksi</th>
+                    <th class="px-4 py-2">Total Pendapatan</th>
+                    <th class="px-4 py-2">Tanggal Dibuat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr class="border-b border-gray-300">
+                    <td class="px-4 py-2">{{ report.start_date }} - {{ report.end_date }}</td>
+                    <td class="px-4 py-2 text-center">{{ report.total_transactions }}</td>
+                    <td class="px-4 py-2 text-center">Rp {{ "{:,.2f}".format(report.total_revenue) }}</td>
+                    <td class="px-4 py-2 text-center">{{ report.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

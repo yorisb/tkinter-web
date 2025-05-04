@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto mt-8 px-4">
+    <h2 class="text-2xl font-semibold mb-4">Data Transaksi</h2>
+
+    <div class="overflow-x-auto shadow-md rounded-lg">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">No Transaksi</th>
+                    <th scope="col" class="px-6 py-3">Username</th>
+                    <th scope="col" class="px-6 py-3">Kode Barang</th>
+                    <th scope="col" class="px-6 py-3">Nama Barang</th>
+                    <th scope="col" class="px-6 py-3">Harga</th>
+                    <th scope="col" class="px-6 py-3">Jumlah</th>
+                    <th scope="col" class="px-6 py-3">Total Harga</th>
+                    <th scope="col" class="px-6 py-3">Tanggal</th>
+                    <th scope="col" class="px-6 py-3">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800">
+                {% for transaction in transactions %}
+                <tr class="border-b dark:border-gray-700">
+                    <td class="px-6 py-4">{{ transaction.id }}</td>
+                    <td class="px-6 py-4">{{ transaction.no_transaksi }}</td>
+                    <td class="px-6 py-4">{{ transaction.username }}</td>
+                    <td class="px-6 py-4">{{ transaction.item_code }}</td>
+                    <td class="px-6 py-4">{{ transaction.item_name }}</td>
+                    <td class="px-6 py-4">Rp {{ transaction.price | int }}</td>
+                    <td class="px-6 py-4">{{ transaction.quantity }}</td>
+                    <td class="px-6 py-4">Rp {{ transaction.total_price | int }}</td>
+                    <td class="px-6 py-4">{{ transaction.created_at }}</td>
+                    <td class="px-6 py-4 flex gap-2">
+                        <a href="{{ url_for('edit_transaction', id=transaction.id) }}" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none dark:focus:ring-blue-800">
+                            Edit
+                        </a>
+                        <a href="{{ url_for('delete_transaction', id=transaction.id) }}" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none dark:focus:ring-red-800" onclick="return confirm('Hapus transaksi ini?');">
+                            Hapus
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}
