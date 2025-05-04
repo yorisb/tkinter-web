@@ -1,30 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mx-auto mt-8">
-    <h2 class="text-2xl font-semibold text-gray-700">Laporan Bulanan</h2>
-
-    <div class="overflow-x-auto mt-4">
-        <table class="w-full border border-gray-200 shadow-md rounded-lg">
-            <thead class="bg-gray-800 text-white">
-                <tr>
-                    <th class="px-4 py-2">Periode</th>
-                    <th class="px-4 py-2">Total Transaksi</th>
-                    <th class="px-4 py-2">Total Pendapatan</th>
-                    <th class="px-4 py-2">Tanggal Dibuat</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for report in reports %}
-                <tr class="border-b border-gray-300">
-                    <td class="px-4 py-2">{{ report.start_date }} - {{ report.end_date }}</td>
-                    <td class="px-4 py-2 text-center">{{ report.total_transactions }}</td>
-                    <td class="px-4 py-2 text-center">Rp {{ "{:,.2f}".format(report.total_revenue) }}</td>
-                    <td class="px-4 py-2 text-center">{{ report.created_at }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Laporan Bulanan</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Ringkasan transaksi per periode</p>
+        </div>
+        <div class="flex gap-2">
+            <!-- You can add export buttons here if needed -->
+            <!-- <button class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Export PDF
+            </button> -->
+        </div>
     </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Periode</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total Transaksi</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total Pendapatan</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tanggal Dibuat</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for report in reports %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                            {{ report.start_date.strftime('%d %b %Y') }} - {{ report.end_date.strftime('%d %b %Y') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500 dark:text-gray-400">
+                            {{ report.total_transactions }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-white">
+                            Rp{{ "{:,.0f}".format(report.total_revenue) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500 dark:text-gray-400">
+                            {{ report.created_at.strftime('%d %b %Y %H:%M') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Optional: Add pagination if you have many reports -->
+    <!-- <div class="mt-4 flex items-center justify-between">
+        <div class="flex-1 flex justify-between sm:hidden">
+            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Previous
+            </a>
+            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Next
+            </a>
+        </div>
+    </div> -->
 </div>
 {% endblock %}

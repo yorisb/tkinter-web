@@ -1,50 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mx-auto mt-8 px-4">
-    <h2 class="text-2xl font-semibold mb-4">Data Transaksi</h2>
-
-    <div class="overflow-x-auto shadow-md rounded-lg">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">ID</th>
-                    <th scope="col" class="px-6 py-3">No Transaksi</th>
-                    <th scope="col" class="px-6 py-3">Username</th>
-                    <th scope="col" class="px-6 py-3">Kode Barang</th>
-                    <th scope="col" class="px-6 py-3">Nama Barang</th>
-                    <th scope="col" class="px-6 py-3">Harga</th>
-                    <th scope="col" class="px-6 py-3">Jumlah</th>
-                    <th scope="col" class="px-6 py-3">Total Harga</th>
-                    <th scope="col" class="px-6 py-3">Tanggal</th>
-                    <th scope="col" class="px-6 py-3">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-gray-800">
-                {% for transaction in transactions %}
-                <tr class="border-b dark:border-gray-700">
-                    <td class="px-6 py-4">{{ transaction.id }}</td>
-                    <td class="px-6 py-4">{{ transaction.no_transaksi }}</td>
-                    <td class="px-6 py-4">{{ transaction.username }}</td>
-                    <td class="px-6 py-4">{{ transaction.item_code }}</td>
-                    <td class="px-6 py-4">{{ transaction.item_name }}</td>
-                    <td class="px-6 py-4">Rp {{ transaction.price | int }}</td>
-                    <td class="px-6 py-4">{{ transaction.quantity }}</td>
-                    <td class="px-6 py-4">Rp {{ transaction.total_price | int }}</td>
-                    <td class="px-6 py-4">{{ transaction.created_at }}</td>
-                    <td class="px-6 py-4 flex gap-2">
-                        <a href="{{ url_for('edit_transaction', id=transaction.id) }}" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none dark:focus:ring-blue-800">
-                            Edit
-                        </a>
-                        <a href="{{ url_for('delete_transaction', id=transaction.id) }}" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none dark:focus:ring-red-800" onclick="return confirm('Hapus transaksi ini?');">
-                            Hapus
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Data Transaksi</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Daftar seluruh transaksi yang tercatat</p>
+        </div>
+        <div class="flex gap-2">
+            <!-- Add any additional buttons here if needed -->
+        </div>
     </div>
 
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No Transaksi</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Kasir</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Kode</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nama Barang</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Harga</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Qty</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tanggal</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for transaction in transactions %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ transaction.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ transaction.no_transaksi }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ transaction.username }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ transaction.item_code }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ transaction.item_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500 dark:text-gray-400">Rp{{ transaction.price | int | format_number }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500 dark:text-gray-400">{{ transaction.quantity }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right text-gray-900 dark:text-white">Rp{{ transaction.total_price | int | format_number }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ transaction.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ url_for('edit_transaction', id=transaction.id) }}" 
+                                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600">
+                                    Edit
+                                </a>
+                                <a href="{{ url_for('delete_transaction', id=transaction.id) }}" 
+                                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600"
+                                   onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');">
+                                    Hapus
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

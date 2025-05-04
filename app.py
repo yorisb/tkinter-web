@@ -129,6 +129,79 @@ def barang():
     
     return render_template('barang.html', items=items)
 
+# ... (previous imports and configurations remain the same)
+
+@app.route('/barang/view/<string:code>')
+def view_item(code):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM items WHERE code = %s", (code,))
+    item = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if not item:
+        flash('Barang tidak ditemukan!', 'error')
+        return redirect(url_for('barang'))
+    
+    return render_template('view_barang.html', item=item)
+
+@app.route('/barang/edit/<string:code>', methods=['GET', 'POST'])
+def edit_item(code):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM items WHERE code = %s", (code,))
+    item = cursor.fetchone()
+    
+    if not item:
+        cursor.close()
+        conn.close()
+        flash('Barang tidak ditemukan!', 'error')
+        return redirect(url_for('barang'))
+    
+    if request.method == 'POST':
+        name = request.form['name']
+        price = float(request.form['price'])
+        stock = int(request.form['stock'])
+        
+        # Update item in database
+        cursor.execute(
+            "UPDATE items SET name = %s, price = %s, stock = %s WHERE code = %s",
+            (name, price, stock, code)
+        )
+        
+        # Log the edit action
+        username = session['username']
+        cursor.execute(
+            "INSERT INTO jejakeditbarang (item_code, old_name, new_name, old_price, new_price, old_stock, new_stock, username) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            (code, item['name'], name, item['price'], price, item['stock'], stock, username)
+        )
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash('Barang berhasil diperbarui!', 'success')
+        return redirect(url_for('view_item', code=code))
+    
+    cursor.close()
+    conn.close()
+    return render_template('edit_barang.html', item=item)
+
+@app.route('/edit/<string:code>')
+def old_edit_redirect(code):
+    return redirect(url_for('edit_item', code=code))
+
+
+@app.template_filter('format_number')
+def format_number(value):
+    return "{:,}".format(value)
+
 @app.route('/transactions')
 def transactions():
     if 'username' not in session:
@@ -296,15 +369,26 @@ def login():
         
         if user:
             session['username'] = username
+            flash(f'Login berhasil! Selamat datang kembali, {username}.', 'success')  # Added username here
             return redirect(url_for('index'))
         else:
             return render_template('login.html', error='Username atau password salah!')
+
     
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
+    # Get username before clearing session
+    username = session.get('username', 'Pengguna')
+    
+    # Clear the session
     session.pop('username', None)
+    
+    # Flash logout success message
+    flash(f'Logout berhasil. Sampai jumpa kembali, {username}!', 'success')
+    
     return redirect(url_for('login'))
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -345,21 +429,6 @@ def add_item():
     cursor.close()
     conn.close()
     return render_template('form.html', item=None, new_code=new_code)
-
-@app.route('/edit/<string:code>', methods=['GET', 'POST'])
-def edit_item(code):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM items WHERE code = %s", (code,))
-    item = cursor.fetchone()
-    if request.method == 'POST':
-        name = request.form['name']
-        price = request.form['price']
-        stock = request.form['stock']
-        cursor.execute("UPDATE items SET name=%s, price=%s, stock=%s WHERE code=%s", (name, price, stock, code))
-        conn.commit()
-        return redirect(url_for('index'))
-    return render_template('form.html', item=item)
 
 @app.route('/delete/<string:code>')
 def delete_item(code):

@@ -59,6 +59,29 @@
     <div class="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden dark:bg-gray-800 max-w-5xl w-full z-10 animate__animated animate__fadeIn">
         <!-- Left Side - Login Form -->
         <div class="w-full md:w-1/2 p-8 space-y-6">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div x-data="{ show: true }" 
+                        x-show="show"
+                        x-init="setTimeout(() => show = false, 3000)"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="mb-4 p-4 rounded-lg {% if category == 'success' %}bg-blue-100 text-blue-800 border border-blue-200{% else %}bg-red-100 text-red-800 border border-red-200{% endif %}">
+                        <div class="flex justify-between items-center">
+                            <p>{{ message }}</p>
+                            <button @click="show = false" class="text-blue-500 hover:text-blue-700">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
             <div class="text-center">
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                     Welcome to Management!
@@ -202,9 +225,11 @@
                     setTimeout(() => {
                         errorAlert.remove();
                     }, 1000);
-                }, 5000);
+                }, 3000);
             }
         });
     </script>
+    <!-- Include Alpine.js for flash message functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </body>
 </html>

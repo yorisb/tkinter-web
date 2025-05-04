@@ -1,31 +1,114 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mx-auto mt-8 mb-28">
-    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Selamat Datang, {{ session['username'] }}</h2>
+<div class="container mx-auto px-4 py-8">
+    <!-- Flash Message Pop-up Modal -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'success' %}
+            <div x-data="{ show: true }" 
+                x-show="show" 
+                x-init="setTimeout(() => show = false, 3000)"
+                class="fixed inset-0 flex items-center justify-center z-50">
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-        <div class="bg-blue-500 text-white rounded-lg shadow-lg p-6">
-            <h5 class="text-lg font-semibold">Total Barang</h5>
-            <p class="text-3xl font-bold mt-2">{{ total_items }}</p>
-            <a href="{{ url_for('barang') }}" class="mt-4 inline-block bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition">Kelola Barang</a>
+                <!-- Overlay gelap -->
+                <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+
+                <!-- Modal -->
+                <div x-transition 
+                    class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg max-w-sm w-full z-10">
+                    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Berhasil!</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ message }}</p>
+                    <button @click="show = false" 
+                            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
+                        OK
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+
+    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">Selamat Datang, {{ session['username'] }}</h2>
+    <p class="text-gray-600 dark:text-gray-300 mb-6">Dashboard Sistem Manajemen POS</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total Barang Card -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h5 class="text-lg font-semibold">Total Barang</h5>
+                        <p class="text-3xl font-bold mt-2">{{ total_items }}</p>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                </div>
+                <a href="{{ url_for('barang') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all duration-300">
+                    Kelola Barang
+                    <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
         </div>
 
-        <div class="bg-green-500 text-white rounded-lg shadow-lg p-6">
-            <h5 class="text-lg font-semibold">Total Transaksi</h5>
-            <p class="text-3xl font-bold mt-2">{{ total_transactions }}</p>
-            <a href="{{ url_for('transactions') }}" class="mt-4 inline-block bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition">Lihat Transaksi</a>
+        <!-- Total Transaksi Card -->
+        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h5 class="text-lg font-semibold">Total Transaksi</h5>
+                        <p class="text-3xl font-bold mt-2">{{ total_transactions }}</p>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                </div>
+                <a href="{{ url_for('transactions') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all duration-300">
+                    Lihat Transaksi
+                    <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
         </div>
 
-        <div class="bg-yellow-500 text-white rounded-lg shadow-lg p-6">
-            <h5 class="text-lg font-semibold">Total Pendapatan</h5>
-            <p class="text-sm">{{ start_date }} - {{ end_date }}</p> <!-- Font lebih kecil -->
-            <p class="text-3xl font-bold mt-2">{{ total_revenue }}</p>
-            <a href="{{ url_for('reports') }}" class="mt-4 inline-block bg-white text-yellow-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition">
-                Lihat Laporan
-            </a>
+        <!-- Total Pendapatan Card -->
+        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h5 class="text-lg font-semibold">Total Pendapatan</h5>
+                        <p class="text-xs opacity-80">{{ start_date }} - {{ end_date }}</p>
+                        <p class="text-3xl font-bold mt-1">{{ total_revenue }}</p>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <a href="{{ url_for('reports') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all duration-300">
+                    Lihat Laporan
+                    <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
         </div>
-        
     </div>
 </div>
+
+<!-- Include Alpine.js for flash message functionality -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 {% endblock %}
