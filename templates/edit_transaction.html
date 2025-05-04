@@ -1,51 +1,81 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto p-6">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit Transaksi</h2>
-    
-    <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-        <form action="{{ url_for('edit_transaction', id=transaction.id) }}" method="POST" class="space-y-6">
-            
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">No Transaksi</label>
-                <input type="text" name="no_transaksi" value="{{ transaction.no_transaksi }}" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+<div class="max-w-3xl mx-auto p-4 sm:p-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Transaksi</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">ID Transaksi: {{ transaction.id }}</p>
+        </div>
+        <a href="{{ url_for('transactions') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Kembali
+        </a>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <form action="{{ url_for('edit_transaction', id=transaction.id) }}" method="POST" class="p-6 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- No Transaksi -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">No Transaksi</label>
+                    <input type="text" name="no_transaksi" value="{{ transaction.no_transaksi }}" 
+                           class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Username -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Username</label>
+                    <input type="text" name="username" value="{{ transaction.username }}" 
+                           class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Kode Barang -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kode Barang</label>
+                    <input type="text" name="item_code" value="{{ transaction.item_code }}" 
+                           class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Nama Barang -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nama Barang</label>
+                    <input type="text" name="item_name" value="{{ transaction.item_name }}" 
+                           class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Harga -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Harga</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 dark:text-gray-400">Rp</span>
+                        </div>
+                        <input type="number" name="price" value="{{ transaction.price }}" 
+                               class="pl-10 block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Jumlah -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Jumlah</label>
+                    <input type="number" name="quantity" value="{{ transaction.quantity }}" 
+                           class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 px-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
             </div>
-            
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Username</label>
-                <input type="text" name="username" value="{{ transaction.username }}" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Kode Barang</label>
-                <input type="text" name="item_code" value="{{ transaction.item_code }}" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Nama Barang</label>
-                <input type="text" name="item_name" value="{{ transaction.item_name }}" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Harga</label>
-                <input type="number" name="price" value="{{ transaction.price }}" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Jumlah</label>
-                <input type="number" name="quantity" value="{{ transaction.quantity }}" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-            </div>
-            
-            <div class="flex justify-end space-x-4">
-                <a href="{{ url_for('transactions') }}" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Batal</a>
-                <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Simpan</button>
+
+            <div class="flex justify-end pt-4 space-x-3">
+                <a href="{{ url_for('transactions') }}" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
+                    Batal
+                </a>
+                <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Simpan Perubahan
+                </button>
             </div>
         </form>
     </div>
